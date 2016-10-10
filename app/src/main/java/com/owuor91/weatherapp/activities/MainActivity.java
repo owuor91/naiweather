@@ -54,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
 
         downloadAPIdata();
         castViews();
+        setupHorizontalScrollView();
     }
 
     @Override
@@ -118,7 +119,9 @@ public class MainActivity extends AppCompatActivity {
         ll_altitude = (LinearLayout) findViewById(R.id.ll_altitude);
         ll_pressure = (LinearLayout) findViewById(R.id.ll_pressure);
         ll_dewpoint = (LinearLayout) findViewById(R.id.ll_dewpoint);
+    }
 
+    private void setupHorizontalScrollView(){
         Display display = getWindowManager().getDefaultDisplay();
         Point size = new Point();
         display.getSize(size);
