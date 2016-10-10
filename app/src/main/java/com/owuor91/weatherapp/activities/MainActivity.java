@@ -1,15 +1,24 @@
 package com.owuor91.weatherapp.activities;
 
 import android.content.Context;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Display;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.orm.SugarRecord;
 import com.owuor91.weatherapp.R;
@@ -18,10 +27,17 @@ import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.services.GeodataService;
 import com.owuor91.weatherapp.services.WeatherdataService;
 
+import java.util.ArrayList;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
+    TextView tvPopulation, tvLatitude, tvLongitude, tvTemperature, tvClouds, tvHumidity, tvWindspeed, tvAltitude, tvPressure, tvDewpoint;
+    LinearLayout parenthorizontal_ll, ll_clouds, ll_humidity, ll_windspeed, ll_altitude, ll_pressure, ll_dewpoint;
+    HorizontalScrollView horizontalScrollView;
+    int currentPosition;
+    ArrayList<LinearLayout> linearLayoutArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +49,8 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("Nairobi Weather");
         toolbar.getBackground().setAlpha(0);
 
-
-        long geodatacount = SugarRecord.count(Geoname.class, null, null);
-        if (geodatacount==0){
-            new GeodataService().getGeodata();
-        }
-
-        long weatherdatacount = SugarRecord.count(WeatherObservation.class, null, null);
-        if (weatherdatacount==0){
-            new WeatherdataService().getWeatherData();
-        }
+        downloadAPIdata();
+        castViews();
     }
 
     @Override
@@ -70,5 +78,106 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    private void downloadAPIdata(){
+        long geodatacount = SugarRecord.count(Geoname.class, null, null);
+        if (geodatacount==0){
+            new GeodataService().getGeodata();
+        }
+
+        long weatherdatacount = SugarRecord.count(WeatherObservation.class, null, null);
+        if (weatherdatacount==0){
+            new WeatherdataService().getWeatherData();
+        }
+    }
+
+    private void castViews(){
+        tvPopulation = (TextView) findViewById(R.id.tvPopulation);
+        tvLatitude = (TextView) findViewById(R.id.tvLatitude);
+        tvLongitude = (TextView) findViewById(R.id.tvLongitude);
+        tvTemperature = (TextView) findViewById(R.id.tvTemperature);
+        tvClouds = (TextView) findViewById(R.id.tvClouds);
+        tvHumidity = (TextView) findViewById(R.id.tvHumidity);
+        tvWindspeed = (TextView) findViewById(R.id.tvWindspeed);
+        tvAltitude = (TextView) findViewById(R.id.tvAltitude);
+        tvPressure = (TextView) findViewById(R.id.tvPressure);
+        tvDewpoint = (TextView) findViewById(R.id.tvDewpoint);
+
+        horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
+
+        parenthorizontal_ll = (LinearLayout) findViewById(R.id.parenthorizontal_ll);
+        ll_clouds = (LinearLayout) findViewById(R.id.ll_clouds);
+        ll_humidity = (LinearLayout) findViewById(R.id.ll_humidity);
+        ll_windspeed = (LinearLayout) findViewById(R.id.ll_windspeed);
+        ll_altitude = (LinearLayout) findViewById(R.id.ll_altitude);
+        ll_pressure = (LinearLayout) findViewById(R.id.ll_pressure);
+        ll_dewpoint = (LinearLayout) findViewById(R.id.ll_dewpoint);
+
+        Display display = getWindowManager().getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int displayWidth = size.x;
+        int viewWidth = displayWidth/2;
+        linearLayoutArrayList = new ArrayList<LinearLayout>();
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        ll_clouds.setLayoutParams(params);
+        ll_humidity.setLayoutParams(params);
+        ll_windspeed.setLayoutParams(params);
+        ll_altitude.setLayoutParams(params);
+        ll_pressure.setLayoutParams(params);
+        ll_dewpoint.setLayoutParams(params);
+
+        linearLayoutArrayList.add(ll_clouds);
+        linearLayoutArrayList.add(ll_humidity);
+        linearLayoutArrayList.add(ll_windspeed);
+        linearLayoutArrayList.add(ll_altitude);
+        linearLayoutArrayList.add(ll_pressure);
+        linearLayoutArrayList.add(ll_dewpoint);
+
+        horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return false;
+            }
+        });
+    }
+
+    class MyGestureDetector extends GestureDetector.SimpleOnGestureListener{
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (e1.getX()< e2.getX()){
+                currentPosition = getVisibleViews("left");
+            }
+            else{
+                currentPosition = getVisibleViews("right");
+            }
+            horizontalScrollView.smoothScrollTo(linearLayoutArrayList.get(currentPosition).getLeft(), 0);
+            return true;
+        }
+    }
+
+    public int getVisibleViews(String direction){
+        Rect hitRect = new Rect();
+        int position = 0;
+        int rightCounter = 0;
+
+        for (int i = 0; i < linearLayoutArrayList.size(); i++) {
+            if (linearLayoutArrayList.get(i).getLocalVisibleRect(hitRect)){
+                if (direction.equals("left")){
+                    position = i;
+                    break;
+                }
+                else if(direction.equals("right")){
+                    rightCounter++;
+                    position=i;
+                    if (rightCounter==2){
+                        break;
+                    }
+                }
+            }
+        }
+        return position;
     }
 }
