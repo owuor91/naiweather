@@ -11,6 +11,7 @@ import android.view.MenuItem;
 
 import com.owuor91.weatherapp.R;
 import com.owuor91.weatherapp.services.GeodataService;
+import com.owuor91.weatherapp.services.WeatherdataService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         new GeodataService().getGeodata();
+        new WeatherdataService().getWeatherData();
     }
 
     @Override
