@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     HorizontalScrollView horizontalScrollView;
     int currentPosition;
     ArrayList<LinearLayout> linearLayoutArrayList;
+    ImageView previous, next;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
         tvPressure = (TextView) findViewById(R.id.tvPressure);
         tvDewpoint = (TextView) findViewById(R.id.tvDewpoint);
 
+        previous = (ImageView) findViewById(R.id.previous);
+        next = (ImageView) findViewById(R.id.next);
         horizontalScrollView = (HorizontalScrollView) findViewById(R.id.horizontalScrollView);
 
         parenthorizontal_ll = (LinearLayout) findViewById(R.id.parenthorizontal_ll);
@@ -118,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         Point size = new Point();
         display.getSize(size);
         int displayWidth = size.x;
-        int viewWidth = displayWidth/2;
+        final int viewWidth = displayWidth/2;
         linearLayoutArrayList = new ArrayList<LinearLayout>();
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(viewWidth, ViewGroup.LayoutParams.WRAP_CONTENT);
 
@@ -135,6 +140,30 @@ public class MainActivity extends AppCompatActivity {
         linearLayoutArrayList.add(ll_altitude);
         linearLayoutArrayList.add(ll_pressure);
         linearLayoutArrayList.add(ll_dewpoint);
+
+        next.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        horizontalScrollView.smoothScrollTo((int) horizontalScrollView.getScrollX() + viewWidth, (int) horizontalScrollView.getScrollY());
+                    }
+                }, 100L);
+            }
+        });
+
+        previous.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        horizontalScrollView.smoothScrollTo((int) horizontalScrollView.getScrollX() - viewWidth, (int) horizontalScrollView.getScrollY());
+                    }
+                }, 100L);
+            }
+        });
 
         horizontalScrollView.setOnTouchListener(new View.OnTouchListener() {
             @Override
