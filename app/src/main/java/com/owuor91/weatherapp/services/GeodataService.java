@@ -1,8 +1,11 @@
 package com.owuor91.weatherapp.services;
 
 import com.owuor91.weatherapp.datamodels.Geodata;
+import com.owuor91.weatherapp.datamodels.Geoname;
 import com.owuor91.weatherapp.restclient.ApiClient;
 import com.owuor91.weatherapp.restclient.ApiInterface;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -18,7 +21,16 @@ public class GeodataService {
         geodataCall.enqueue(new Callback<Geodata>() {
             @Override
             public void onResponse(Call<Geodata> call, Response<Geodata> response) {
-
+                if (response.isSuccessful()){
+                    List<Geoname> geonames = response.body().getGeonames();
+                    int listsize = geonames.size();
+                    for (int i = 0; i <listsize ; i++) {
+                        if (geonames.get(i).getName().equals("Nairobi")){
+                            Geoname nairobi = geonames.get(i);
+                            nairobi.save();
+                        }
+                    }
+                }
             }
 
             @Override

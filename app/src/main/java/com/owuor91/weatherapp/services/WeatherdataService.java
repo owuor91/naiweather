@@ -1,5 +1,6 @@
 package com.owuor91.weatherapp.services;
 
+import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.datamodels.Weatherdata;
 import com.owuor91.weatherapp.restclient.ApiClient;
 import com.owuor91.weatherapp.restclient.ApiInterface;
@@ -18,7 +19,10 @@ public class WeatherdataService {
         weatherdataCall.enqueue(new Callback<Weatherdata>() {
             @Override
             public void onResponse(Call<Weatherdata> call, Response<Weatherdata> response) {
-
+                if (response.isSuccessful()){
+                    WeatherObservation nairobiWeatherData = response.body().getWeatherObservation();
+                    nairobiWeatherData.save();
+                }
             }
 
             @Override

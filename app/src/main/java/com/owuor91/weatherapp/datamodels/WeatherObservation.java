@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 
 @Generated("org.jsonschema2pojo")
-public class WeatherObservation extends SugarRecordn{
+public class WeatherObservation extends SugarRecord{
 
     @SerializedName("elevation")
     @Expose

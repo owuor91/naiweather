@@ -10,7 +10,10 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.orm.SugarRecord;
 import com.owuor91.weatherapp.R;
+import com.owuor91.weatherapp.datamodels.Geoname;
+import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.services.GeodataService;
 import com.owuor91.weatherapp.services.WeatherdataService;
 
@@ -28,8 +31,15 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("Nairobi Weather");
 
-        new GeodataService().getGeodata();
-        new WeatherdataService().getWeatherData();
+        long geodatacount = SugarRecord.count(Geoname.class, null, null);
+        if (geodatacount==0){
+            new GeodataService().getGeodata();
+        }
+
+        long weatherdatacount = SugarRecord.count(WeatherObservation.class, null, null);
+        if (weatherdatacount==0){
+            new WeatherdataService().getWeatherData();
+        }
     }
 
     @Override
