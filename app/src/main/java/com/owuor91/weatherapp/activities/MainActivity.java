@@ -29,13 +29,14 @@ import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.services.GeodataService;
 import com.owuor91.weatherapp.services.WeatherdataService;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
-    TextView tvPopulation, tvLatitude, tvLongitude, tvTemperature, tvClouds, tvHumidity, tvWindspeed, tvAltitude, tvPressure, tvDewpoint;
+    public TextView tvPopulation, tvLatitude, tvLongitude, tvTemperature, tvClouds, tvHumidity, tvWindspeed, tvAltitude, tvPressure, tvDewpoint;
     LinearLayout parenthorizontal_ll, ll_clouds, ll_humidity, ll_windspeed, ll_altitude, ll_pressure, ll_dewpoint;
     HorizontalScrollView horizontalScrollView;
     int currentPosition;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
         downloadAPIdata();
         castViews();
         setupHorizontalScrollView();
+        bindDataToTextViews();
     }
 
     @Override
@@ -211,5 +213,26 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return position;
+    }
+
+    private void bindDataToTextViews(){
+        Geoname nairobiGeoData = SugarRecord.listAll(Geoname.class).get(0);
+        if (nairobiGeoData!=null){
+            DecimalFormat decimalformat = new DecimalFormat("#,###");
+            tvPopulation.setText(decimalformat.format(nairobiGeoData.getPopulation()));
+            tvLongitude.setText("Long. :"+nairobiGeoData.getLng());
+            tvLatitude.setText("Lat. :"+nairobiGeoData.getLat());
+        }
+
+        WeatherObservation nairobiWeather = SugarRecord.listAll(WeatherObservation.class).get(0);
+        if (nairobiWeather!=null){
+            tvTemperature.setText(nairobiWeather.getTemperature()+"\u2103");
+            tvClouds.setText(nairobiWeather.getClouds());
+            tvPressure.setText(nairobiWeather.getHectoPascAltimeter()+" hPa");
+            tvDewpoint.setText(nairobiWeather.getDewPoint()+"\u2103");
+            tvAltitude.setText(nairobiWeather.getElevation()+" Metres");
+            tvHumidity.setText(nairobiWeather.getHumidity()+"%");
+            tvWindspeed.setText(nairobiWeather.getWindSpeed()+" mph");
+        }
     }
 }
