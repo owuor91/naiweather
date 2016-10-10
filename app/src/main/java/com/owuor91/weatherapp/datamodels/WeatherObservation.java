@@ -4,9 +4,10 @@ package com.owuor91.weatherapp.datamodels;
 import javax.annotation.Generated;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.orm.SugarRecord;
 
 @Generated("org.jsonschema2pojo")
-public class WeatherObservation {
+public class WeatherObservation extends SugarRecordn{
 
     @SerializedName("elevation")
     @Expose
