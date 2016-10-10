@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.orm.SugarRecord;
 import com.owuor91.weatherapp.R;
 import com.owuor91.weatherapp.datamodels.Geoname;
@@ -29,6 +30,7 @@ import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.services.GeodataService;
 import com.owuor91.weatherapp.services.WeatherdataService;
 
+import io.fabric.sdk.android.Fabric;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
@@ -42,10 +44,12 @@ public class MainActivity extends AppCompatActivity {
     int currentPosition;
     ArrayList<LinearLayout> linearLayoutArrayList;
     ImageView previous, next;
+    public static long geodatacount, weatherdatacount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder().setDefaultFontPath("fonts/GothamRoundedBook.ttf").setFontAttrId(R.attr.fontPath).build());
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -88,12 +92,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadAPIdata(){
-        long geodatacount = SugarRecord.count(Geoname.class, null, null);
+        geodatacount = SugarRecord.count(Geoname.class, null, null);
         if (geodatacount==0){
             new GeodataService().getGeodata();
         }
 
-        long weatherdatacount = SugarRecord.count(WeatherObservation.class, null, null);
+        weatherdatacount = SugarRecord.count(WeatherObservation.class, null, null);
         if (weatherdatacount==0){
             new WeatherdataService().getWeatherData();
         }
@@ -217,24 +221,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public static void bindDataToTextViews(){
-        Geoname nairobiGeoData = SugarRecord.listAll(Geoname.class).get(0);
-        if (nairobiGeoData!=null){
-            DecimalFormat decimalformat = new DecimalFormat("#,###");
-            tvPopulation.setText(decimalformat.format(nairobiGeoData.getPopulation()));
-            tvLongitude.setText("Long. : "+nairobiGeoData.getLng());
-            tvLatitude.setText("Lat. : "+nairobiGeoData.getLat());
+        if (geodatacount!=0){
+            Geoname nairobiGeoData = SugarRecord.listAll(Geoname.class).get(0);
+            if (nairobiGeoData!=null){
+                DecimalFormat decimalformat = new DecimalFormat("#,###");
+                tvPopulation.setText(decimalformat.format(nairobiGeoData.getPopulation()));
+                tvLongitude.setText("Long. : "+nairobiGeoData.getLng());
+                tvLatitude.setText("Lat. : "+nairobiGeoData.getLat());
+            }
         }
 
-        WeatherObservation nairobiWeather = SugarRecord.listAll(WeatherObservation.class).get(0);
-        if (nairobiWeather!=null){
-            tvTemperature.setText(nairobiWeather.getTemperature()+"\u2103");
-            tvClouds.setText(nairobiWeather.getClouds());
-            tvPressure.setText(nairobiWeather.getHectoPascAltimeter()+" hPa");
-            tvDewpoint.setText(nairobiWeather.getDewPoint()+"\u2103");
-            tvAltitude.setText(nairobiWeather.getElevation()+" Metres");
-            tvHumidity.setText(nairobiWeather.getHumidity()+"%");
-            tvWindspeed.setText(nairobiWeather.getWindSpeed()+" mph");
+        if(weatherdatacount !=0){
+            WeatherObservation nairobiWeather = SugarRecord.listAll(WeatherObservation.class).get(0);
+            if (nairobiWeather!=null){
+                tvTemperature.setText(nairobiWeather.getTemperature()+"\u2103");
+                tvClouds.setText(nairobiWeather.getClouds());
+                tvPressure.setText(nairobiWeather.getHectoPascAltimeter()+" hPa");
+                tvDewpoint.setText(nairobiWeather.getDewPoint()+"\u2103");
+                tvAltitude.setText(nairobiWeather.getElevation()+" Metres");
+                tvHumidity.setText(nairobiWeather.getHumidity()+"%");
+                tvWindspeed.setText(nairobiWeather.getWindSpeed()+" mph");
+            }
         }
+
     }
 
     private void refreshWeatherData(){

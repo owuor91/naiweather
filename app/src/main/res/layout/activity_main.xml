@@ -47,7 +47,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tvPopulation"
                     android:textSize="20dp"
-                    android:text="2,750,862"/>
+                    android:text="-"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -69,13 +69,13 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/tvLatitude"
                     android:textSize="16dp"
-                    android:text="Lat. : 1.3697"/>
+                    android:text="Lat. : -"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/tvLongitude"
                     android:textSize="16dp"
-                    android:text="Long. : 33.23497"/>
+                    android:text="Long. : -"/>
             </LinearLayout>
         </LinearLayout>
         <LinearLayout
@@ -94,7 +94,7 @@
                 android:id="@+id/tvTemperature"
                 android:textSize="80dp"
                 android:layout_marginTop="-20dp"
-                android:text="40 C"/>
+                android:text="-"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -145,7 +145,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvClouds"
-                            android:text="Dense Clouds"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -167,7 +167,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvHumidity"
-                            android:text="38%"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -189,7 +189,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvWindspeed"
-                            android:text="13 mph"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvAltitude"
-                            android:text="1624 m"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -233,7 +233,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvPressure"
-                            android:text="1200 hPa"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -255,7 +255,7 @@
                             android:layout_height="wrap_content"
                             android:textSize="18dp"
                             android:id="@+id/tvDewpoint"
-                            android:text="12 C"/>
+                            android:text="-"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
