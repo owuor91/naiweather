@@ -36,7 +36,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
-    public TextView tvPopulation, tvLatitude, tvLongitude, tvTemperature, tvClouds, tvHumidity, tvWindspeed, tvAltitude, tvPressure, tvDewpoint;
+    public static TextView tvPopulation, tvLatitude, tvLongitude, tvTemperature, tvClouds, tvHumidity, tvWindspeed, tvAltitude, tvPressure, tvDewpoint;
     LinearLayout parenthorizontal_ll, ll_clouds, ll_humidity, ll_windspeed, ll_altitude, ll_pressure, ll_dewpoint;
     HorizontalScrollView horizontalScrollView;
     int currentPosition;
@@ -74,7 +74,8 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_refresh) {
+            refreshWeatherData();
             return true;
         }
 
@@ -215,13 +216,13 @@ public class MainActivity extends AppCompatActivity {
         return position;
     }
 
-    private void bindDataToTextViews(){
+    public static void bindDataToTextViews(){
         Geoname nairobiGeoData = SugarRecord.listAll(Geoname.class).get(0);
         if (nairobiGeoData!=null){
             DecimalFormat decimalformat = new DecimalFormat("#,###");
             tvPopulation.setText(decimalformat.format(nairobiGeoData.getPopulation()));
-            tvLongitude.setText("Long. :"+nairobiGeoData.getLng());
-            tvLatitude.setText("Lat. :"+nairobiGeoData.getLat());
+            tvLongitude.setText("Long. : "+nairobiGeoData.getLng());
+            tvLatitude.setText("Lat. : "+nairobiGeoData.getLat());
         }
 
         WeatherObservation nairobiWeather = SugarRecord.listAll(WeatherObservation.class).get(0);
@@ -234,5 +235,10 @@ public class MainActivity extends AppCompatActivity {
             tvHumidity.setText(nairobiWeather.getHumidity()+"%");
             tvWindspeed.setText(nairobiWeather.getWindSpeed()+" mph");
         }
+    }
+
+    private void refreshWeatherData(){
+        SugarRecord.deleteAll(WeatherObservation.class);
+        new WeatherdataService().getWeatherData();
     }
 }

@@ -1,5 +1,6 @@
 package com.owuor91.weatherapp.services;
 
+import com.owuor91.weatherapp.activities.MainActivity;
 import com.owuor91.weatherapp.datamodels.WeatherObservation;
 import com.owuor91.weatherapp.datamodels.Weatherdata;
 import com.owuor91.weatherapp.restclient.ApiClient;
@@ -22,6 +23,7 @@ public class WeatherdataService {
                 if (response.isSuccessful()){
                     WeatherObservation nairobiWeatherData = response.body().getWeatherObservation();
                     nairobiWeatherData.save();
+                    MainActivity.bindDataToTextViews();
                 }
             }
 
